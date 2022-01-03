@@ -11,8 +11,10 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/cast"
 
 	"github.com/pkg/errors"
@@ -193,9 +195,54 @@ func (conf *HadeConfig) IsExist(key string) bool {
 	return conf.find(key) != nil
 }
 
+// Get 获取某个配置项
+func (conf *HadeConfig) Get(key string) interface{} {
+	return conf.find(key)
+}
+
+// GetBool 获取bool类型配置
+func (conf *HadeConfig) GetBool(key string) bool {
+	return cast.ToBool(conf.find(key))
+}
+
 // GetInt 获取int类型配置
 func (conf *HadeConfig) GetInt(key string) int {
 	return cast.ToInt(conf.find(key))
+}
+
+// GetFloat64 get float64
+func (conf *HadeConfig) GetFloat64(key string) float64 {
+	return cast.ToFloat64(conf.find(key))
+}
+
+// GetTime get time type
+func (conf *HadeConfig) GetTime(key string) time.Time {
+	return cast.ToTime(conf.find(key))
+}
+
+// GetIntSlice get int slice type
+func (conf *HadeConfig) GetIntSlice(key string) []int {
+	return cast.ToIntSlice(conf.find(key))
+}
+
+// GetStringSlice get string slice type
+func (conf *HadeConfig) GetStringSlice(key string) []string {
+	return cast.ToStringSlice(conf.find(key))
+}
+
+// GetStringMap get map which key is string, value is interface
+func (conf *HadeConfig) GetStringMap(key string) map[string]interface{} {
+	return cast.ToStringMap(conf.find(key))
+}
+
+// GetStringMapString get map which key is string, value is string
+func (conf *HadeConfig) GetStringMapString(key string) map[string]string {
+	return cast.ToStringMapString(conf.find(key))
+}
+
+// GetStringMapStringSlice get map which key is string, value is string slice
+func (conf *HadeConfig) GetStringMapStringSlice(key string) map[string][]string {
+	return cast.ToStringMapStringSlice(conf.find(key))
 }
 
 // find 获取配置
@@ -232,4 +279,17 @@ func searchMap(source map[string]interface{}, path []string) interface{} {
 		}
 	}
 	return nil
+}
+
+// Load a config to a struct, val should be an pointer
+func (conf *HadeConfig) Load(key string, val interface{}) error {
+	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+		TagName: "yaml",
+		Result:  val,
+	})
+	if err != nil {
+		return err
+	}
+
+	return decoder.Decode(conf.find(key))
 }

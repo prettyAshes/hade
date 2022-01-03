@@ -3,8 +3,12 @@ package log
 import (
 	"hade/framework"
 	"hade/framework/contact"
+	"hade/framework/provider/log/formatter"
 	"hade/framework/provider/log/services"
+	"hade/framework/util"
 	"io"
+
+	"github.com/spf13/cast"
 )
 
 // HadeLogServicerProvider 提供日志服务
@@ -21,6 +25,10 @@ type HadeLogServicerProvider struct {
 	CtxFielder contact.CtxFielder
 	// 日志输出信息
 	Output io.Writer
+	// 日志路径
+	LogFolder string
+	// 日期格式
+	DateFormat string
 }
 
 func (provider *HadeLogServicerProvider) Name() string {
@@ -28,15 +36,29 @@ func (provider *HadeLogServicerProvider) Name() string {
 }
 
 func (provider *HadeLogServicerProvider) Boot(container framework.Container) error {
-	// configServicer := container.MustGetInstance(contact.ConfigKey).(contact.Config)
+	appServicer := container.MustGetInstance(contact.AppKey).(contact.App)
+	configServicer := container.MustGetInstance(contact.ConfigKey).(contact.Config)
 
-	// if !configServicer.IsExist("log.formatter") {
-	// 	provider.Formatter = formatter.TextFormatter
-	// }
+	if configServicer.IsExist("log.formatter") {
+		v := configServicer.GetString("log.formatter")
+		if v == "json" {
+			provider.Formatter = formatter.JsonFormatter
+		} else if v == "text" {
+			provider.Formatter = formatter.TextFormatter
+		}
+	}
 
-	// if configServicer.GetInt("log.level") == int(contact.UnknownLevel) {
-	// 	provider.Formatter = formatter.TextFormatter
-	// }
+	logLevel := cast.ToUint32(configServicer.Get("log.level"))
+	if logLevel == uint32(contact.UnknownLevel) {
+		provider.Level = contact.InfoLevel
+	}
+
+	logFolder := appServicer.LogFolder()
+	if logFolder == "" {
+		logFolder = util.GetExecDirectory()
+	}
+
+	provider.LogFolder = logFolder
 
 	return nil
 }
@@ -62,5 +84,5 @@ func (provider *HadeLogServicerProvider) IsDefer() bool {
 }
 
 func (provider *HadeLogServicerProvider) Params(container framework.Container) []interface{} {
-	return []interface{}{container, provider.Level, provider.CtxFielder, provider.Formatter, provider.Output}
+	return []interface{}{container, provider.Level, provider.CtxFielder, provider.Formatter, provider.Output, provider.LogFolder}
 }
