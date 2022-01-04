@@ -82,8 +82,8 @@ func (hade *HadeContainer) InstanceMustExist(name string) {
 
 // MustGetInstance 获取一个服务实例, 优先从内存中获取
 func (hade *HadeContainer) MustGetInstance(name string) interface{} {
-	hade.lock.RLock()
-	defer hade.lock.RUnlock()
+	// hade.lock.RLock()
+	// defer hade.lock.RUnlock()
 
 	if instance, ok := hade.instances[name]; ok {
 		return instance

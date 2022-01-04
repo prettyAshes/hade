@@ -281,15 +281,18 @@ func searchMap(source map[string]interface{}, path []string) interface{} {
 	return nil
 }
 
-// Load a config to a struct, val should be an pointer
-func (conf *HadeConfig) Load(key string, val interface{}) error {
+// Load a config to a struct, modal should be an pointer
+func (conf *HadeConfig) Load(key string, modal interface{}, val interface{}) error {
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 		TagName: "yaml",
-		Result:  val,
+		Result:  modal,
 	})
 	if err != nil {
 		return err
 	}
 
+	if val != nil {
+		return decoder.Decode(val)
+	}
 	return decoder.Decode(conf.find(key))
 }

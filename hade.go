@@ -4,6 +4,13 @@ import (
 	"hade/framework"
 	"hade/framework/gin"
 	"net/http"
+
+	hadeLog "hade/framework/provider/log"
+	"hade/framework/provider/orm"
+
+	"hade/framework/provider/app"
+	"hade/framework/provider/config"
+	"hade/framework/provider/env"
 )
 
 type Hade struct {
@@ -16,13 +23,26 @@ type Hade struct {
 }
 
 // New 初始化Hade实例
-func New() Hade {
+func New(baseFolder string) Hade {
 	hade := Hade{
 		Container: framework.NewHadeContainer(),
 		Engine:    gin.New(),
 	}
 
+	hade.bind(baseFolder)
+
 	return hade
+}
+
+// bind 绑定常用服务
+func (hade *Hade) bind(baseFolder string) {
+	// 绑定App服务提供者
+	hade.Bind(&app.HadeAppProvider{BaseFolder: baseFolder})
+	// 后续初始化需要绑定的服务提供者...
+	hade.Bind(&env.HadeEnvProvider{})
+	hade.Bind(&config.HadeConfigProvider{})
+	hade.Bind(&hadeLog.HadeLogServicerProvider{})
+	hade.Bind(&orm.GormProvider{})
 }
 
 // Bind 为Hade容器绑定一个服务
