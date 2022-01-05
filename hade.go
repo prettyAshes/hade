@@ -31,6 +31,9 @@ func New(baseFolder string) Hade {
 
 	hade.bind(baseFolder)
 
+	hade.Use(gin.Logger())
+	hade.Use(gin.Recovery())
+
 	return hade
 }
 

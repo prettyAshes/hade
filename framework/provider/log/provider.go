@@ -39,6 +39,12 @@ func (provider *HadeLogServicerProvider) Boot(container framework.Container) err
 	appServicer := container.MustGetInstance(contact.AppKey).(contact.App)
 	configServicer := container.MustGetInstance(contact.ConfigKey).(contact.Config)
 
+	if configServicer.IsExist("log.driver") {
+		provider.Driver = configServicer.GetString("log.driver")
+	} else {
+		panic("log driver is not exist")
+	}
+
 	if configServicer.IsExist("log.formatter") {
 		v := configServicer.GetString("log.formatter")
 		if v == "json" {
@@ -46,6 +52,8 @@ func (provider *HadeLogServicerProvider) Boot(container framework.Container) err
 		} else if v == "text" {
 			provider.Formatter = formatter.TextFormatter
 		}
+	} else {
+		provider.Formatter = formatter.TextFormatter
 	}
 
 	logLevel := cast.ToUint32(configServicer.Get("log.level"))
@@ -57,7 +65,6 @@ func (provider *HadeLogServicerProvider) Boot(container framework.Container) err
 	if logFolder == "" {
 		logFolder = util.GetExecDirectory()
 	}
-
 	provider.LogFolder = logFolder
 
 	return nil

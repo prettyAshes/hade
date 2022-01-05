@@ -62,27 +62,27 @@ func (hadeLog *HadeLog) Panic(ctx context.Context, msg string, fields map[string
 }
 
 func (hadeLog *HadeLog) Fatal(ctx context.Context, msg string, fields map[string]interface{}) {
-	hadeLog.logf(contact.PanicLevel, ctx, msg, fields)
+	hadeLog.logf(contact.FatalLevel, ctx, msg, fields)
 }
 
 func (hadeLog *HadeLog) Error(ctx context.Context, msg string, fields map[string]interface{}) {
-	hadeLog.logf(contact.PanicLevel, ctx, msg, fields)
+	hadeLog.logf(contact.ErrorLevel, ctx, msg, fields)
 }
 
 func (hadeLog *HadeLog) Warn(ctx context.Context, msg string, fields map[string]interface{}) {
-	hadeLog.logf(contact.PanicLevel, ctx, msg, fields)
+	hadeLog.logf(contact.WarnLevel, ctx, msg, fields)
 }
 
 func (hadeLog *HadeLog) Info(ctx context.Context, msg string, fields map[string]interface{}) {
-	hadeLog.logf(contact.PanicLevel, ctx, msg, fields)
+	hadeLog.logf(contact.InfoLevel, ctx, msg, fields)
 }
 
 func (hadeLog *HadeLog) Debug(ctx context.Context, msg string, fields map[string]interface{}) {
-	hadeLog.logf(contact.PanicLevel, ctx, msg, fields)
+	hadeLog.logf(contact.DebugLevel, ctx, msg, fields)
 }
 
 func (hadeLog *HadeLog) Trace(ctx context.Context, msg string, fields map[string]interface{}) {
-	hadeLog.logf(contact.PanicLevel, ctx, msg, fields)
+	hadeLog.logf(contact.TraceLevel, ctx, msg, fields)
 }
 
 func (hadeLog *HadeLog) SetLevel(level contact.LogLevel) {

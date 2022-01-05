@@ -52,35 +52,52 @@ type DBConfig struct {
 
 // FormatDsn 生成dsn
 func (conf *DBConfig) FormatDsn() (string, error) {
+	var (
+		timeout      time.Duration
+		readTimeout  time.Duration
+		writeTimeout time.Duration
+		location     *time.Location
+		err          error
+	)
 	port := strconv.Itoa(conf.Port)
-	timeout, err := time.ParseDuration(conf.Timeout)
-	if err != nil {
-		return "", err
+
+	if conf.Timeout != "" {
+		timeout, err = time.ParseDuration(conf.Timeout)
+		if err != nil {
+			return "", err
+		}
 	}
-	readTimeout, err := time.ParseDuration(conf.ReadTimeout)
-	if err != nil {
-		return "", err
+	if conf.Timeout != "" {
+		readTimeout, err = time.ParseDuration(conf.ReadTimeout)
+		if err != nil {
+			return "", err
+		}
 	}
-	writeTimeout, err := time.ParseDuration(conf.WriteTimeout)
-	if err != nil {
-		return "", err
+	if conf.Timeout != "" {
+		writeTimeout, err = time.ParseDuration(conf.WriteTimeout)
+		if err != nil {
+			return "", err
+		}
 	}
-	location, err := time.LoadLocation(conf.Loc)
-	if err != nil {
-		return "", err
+	if conf.Timeout != "" {
+		location, err = time.LoadLocation(conf.Loc)
+		if err != nil {
+			return "", err
+		}
 	}
 	driverConf := &mysql.Config{
-		User:         conf.Username,
-		Passwd:       conf.Password,
-		Net:          conf.Protocol,
-		Addr:         net.JoinHostPort(conf.Host, port),
-		DBName:       conf.Database,
-		Collation:    conf.Collation,
-		Loc:          location,
-		Timeout:      timeout,
-		ReadTimeout:  readTimeout,
-		WriteTimeout: writeTimeout,
-		ParseTime:    conf.ParseTime,
+		User:                 conf.Username,
+		Passwd:               conf.Password,
+		Net:                  conf.Protocol,
+		Addr:                 net.JoinHostPort(conf.Host, port),
+		DBName:               conf.Database,
+		Collation:            conf.Collation,
+		Loc:                  location,
+		Timeout:              timeout,
+		ReadTimeout:          readTimeout,
+		WriteTimeout:         writeTimeout,
+		ParseTime:            conf.ParseTime,
+		AllowNativePasswords: true,
 	}
 	return driverConf.FormatDSN(), nil
 }

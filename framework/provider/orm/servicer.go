@@ -42,19 +42,19 @@ func (app *HadeGorm) GetDB(option ...contact.DBOption) map[string]*gorm.DB {
 	// 读取默认配置
 	configMap := GetBaseConfig(app.container)
 
-	logService := app.container.MustGetInstance(contact.LogKey).(contact.Log)
+	// logService := app.container.MustGetInstance(contact.LogKey).(contact.Log)
 
 	// 设置Logger
-	ormLogger := NewOrmLogger(logService)
+	// ormLogger := NewOrmLogger(logService)
 	for dbName, config := range configMap {
 		config.Config = &gorm.Config{
-			Logger: ormLogger,
+			// Logger: ormLogger,
 		}
 
 		// option对opt进行修改
 		for _, opt := range option {
 			if err := opt(app.container, config); err != nil {
-				return nil
+				panic("change option error: " + err.Error())
 			}
 		}
 
@@ -62,7 +62,7 @@ func (app *HadeGorm) GetDB(option ...contact.DBOption) map[string]*gorm.DB {
 		if config.Dsn == "" {
 			dsn, err := config.FormatDsn()
 			if err != nil {
-				return nil
+				panic("formatDSN error: " + err.Error())
 			}
 			config.Dsn = dsn
 		}
@@ -135,7 +135,7 @@ func (app *HadeGorm) GetDB(option ...contact.DBOption) map[string]*gorm.DB {
 		}
 
 		// 挂载到map中，结束配置
-		app.dbs[config.Dsn] = db
+		app.dbs[dbName] = db
 	}
 
 	return app.dbs
