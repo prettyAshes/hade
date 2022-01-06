@@ -29,15 +29,15 @@ func (hadeLog *HadeLog) IsLevelEnable(level contact.LogLevel) bool {
 }
 
 // logf 日志打印的底层函数
-func (hadeLog *HadeLog) logf(level contact.LogLevel, ctx context.Context, msg string, fields map[string]interface{}) error {
+func (hadeLog *HadeLog) logf(level contact.LogLevel, ctx context.Context, msg string, fields [][]interface{}) error {
 	if !hadeLog.IsLevelEnable(level) {
 		return nil
 	}
 
 	if hadeLog.ctxFielder != nil {
-		fields := hadeLog.ctxFielder(ctx)
-		for k, v := range fields {
-			fields[k] = v
+		ctxFields := hadeLog.ctxFielder(ctx)
+		for k, v := range ctxFields {
+			fields = append(fields, []interface{}{k, v})
 		}
 	}
 
@@ -57,31 +57,31 @@ func (hadeLog *HadeLog) logf(level contact.LogLevel, ctx context.Context, msg st
 	return nil
 }
 
-func (hadeLog *HadeLog) Panic(ctx context.Context, msg string, fields map[string]interface{}) {
+func (hadeLog *HadeLog) Panic(ctx context.Context, msg string, fields [][]interface{}) {
 	hadeLog.logf(contact.PanicLevel, ctx, msg, fields)
 }
 
-func (hadeLog *HadeLog) Fatal(ctx context.Context, msg string, fields map[string]interface{}) {
+func (hadeLog *HadeLog) Fatal(ctx context.Context, msg string, fields [][]interface{}) {
 	hadeLog.logf(contact.FatalLevel, ctx, msg, fields)
 }
 
-func (hadeLog *HadeLog) Error(ctx context.Context, msg string, fields map[string]interface{}) {
+func (hadeLog *HadeLog) Error(ctx context.Context, msg string, fields [][]interface{}) {
 	hadeLog.logf(contact.ErrorLevel, ctx, msg, fields)
 }
 
-func (hadeLog *HadeLog) Warn(ctx context.Context, msg string, fields map[string]interface{}) {
+func (hadeLog *HadeLog) Warn(ctx context.Context, msg string, fields [][]interface{}) {
 	hadeLog.logf(contact.WarnLevel, ctx, msg, fields)
 }
 
-func (hadeLog *HadeLog) Info(ctx context.Context, msg string, fields map[string]interface{}) {
+func (hadeLog *HadeLog) Info(ctx context.Context, msg string, fields [][]interface{}) {
 	hadeLog.logf(contact.InfoLevel, ctx, msg, fields)
 }
 
-func (hadeLog *HadeLog) Debug(ctx context.Context, msg string, fields map[string]interface{}) {
+func (hadeLog *HadeLog) Debug(ctx context.Context, msg string, fields [][]interface{}) {
 	hadeLog.logf(contact.DebugLevel, ctx, msg, fields)
 }
 
-func (hadeLog *HadeLog) Trace(ctx context.Context, msg string, fields map[string]interface{}) {
+func (hadeLog *HadeLog) Trace(ctx context.Context, msg string, fields [][]interface{}) {
 	hadeLog.logf(contact.TraceLevel, ctx, msg, fields)
 }
 

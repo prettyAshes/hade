@@ -113,8 +113,8 @@ func (app *HadeGorm) GetDB(option ...contact.DBOption) map[string]*gorm.DB {
 		if config.ConnMaxLifetime != "" {
 			liftTime, err := time.ParseDuration(config.ConnMaxLifetime)
 			if err != nil {
-				logger.Error(context.Background(), "conn max lift time error", map[string]interface{}{
-					"err": err,
+				logger.Error(context.Background(), "conn max lift time error", [][]interface{}{
+					{"err", err},
 				})
 				panic("conn max lift time error: " + err.Error())
 			} else {
@@ -125,8 +125,8 @@ func (app *HadeGorm) GetDB(option ...contact.DBOption) map[string]*gorm.DB {
 		if config.ConnMaxIdletime != "" {
 			idleTime, err := time.ParseDuration(config.ConnMaxIdletime)
 			if err != nil {
-				logger.Error(context.Background(), "conn max idle time error", map[string]interface{}{
-					"err": err,
+				logger.Error(context.Background(), "conn max idle time error", [][]interface{}{
+					{"err", err},
 				})
 				panic("conn max lift time error: " + err.Error())
 			} else {

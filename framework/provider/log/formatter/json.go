@@ -2,23 +2,33 @@ package formatter
 
 import (
 	"bytes"
-	"encoding/json"
 	"hade/framework/contact"
+	"strings"
 	"time"
 
-	"github.com/pkg/errors"
+	"github.com/spf13/cast"
 )
 
-func JsonFormatter(level contact.LogLevel, t time.Time, msg string, fields map[string]interface{}) ([]byte, error) {
+func JsonFormatter(level contact.LogLevel, t time.Time, msg string, fields [][]interface{}) ([]byte, error) {
 	bf := bytes.NewBuffer([]byte{})
-	fields["msg"] = msg
-	fields["level"] = level
-	fields["timestamp"] = t.Format(time.RFC3339)
-	c, err := json.Marshal(fields)
-	if err != nil {
-		return bf.Bytes(), errors.Wrap(err, "json format error")
+	fields = append(fields,
+		[]interface{}{"msg", msg},
+		[]interface{}{"level", level},
+		[]interface{}{"timestamp", t.Format(time.RFC3339)})
+
+	var l []string
+	for _, field := range fields {
+		if len(field) != 2 {
+			continue
+		}
+		k := cast.ToString(field[0])
+		v := cast.ToString(field[1])
+		if k == "" || v == "" {
+			continue
+		}
+		l = append(l, k+": "+v)
 	}
 
-	bf.Write(c)
+	bf.Write([]byte(strings.Join(l, " | ")))
 	return bf.Bytes(), nil
 }

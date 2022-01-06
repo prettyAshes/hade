@@ -8,7 +8,7 @@ import (
 )
 
 // TextFormatter 表示文本格式输出
-func TextFormatter(level contact.LogLevel, t time.Time, msg string, fields map[string]interface{}) ([]byte, error) {
+func TextFormatter(level contact.LogLevel, t time.Time, msg string, fields [][]interface{}) ([]byte, error) {
 	bf := bytes.NewBuffer([]byte{})
 	Separator := "\t"
 
