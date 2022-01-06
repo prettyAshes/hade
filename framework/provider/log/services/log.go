@@ -100,3 +100,7 @@ func (hadeLog *HadeLog) SetFormatter(formatter contact.Formatter) {
 func (hadeLog *HadeLog) SetOutput(out io.Writer) {
 	hadeLog.output = out
 }
+
+func (hadeLog *HadeLog) GetOutPut() io.Writer {
+	return hadeLog.output
+}

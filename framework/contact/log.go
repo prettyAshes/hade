@@ -60,4 +60,6 @@ type Log interface {
 	SetFormatter(formatter Formatter)
 	// SetOutput 设置输出管道
 	SetOutput(out io.Writer)
+	// GetOutPut 获取当前输出管道
+	GetOutPut() io.Writer
 }

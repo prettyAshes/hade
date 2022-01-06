@@ -2,7 +2,9 @@ package hade
 
 import (
 	"hade/framework"
+	"hade/framework/contact"
 	"hade/framework/gin"
+	"hade/middlewares"
 	"net/http"
 
 	hadeLog "hade/framework/provider/log"
@@ -29,7 +31,11 @@ func New(baseFolder string) Hade {
 		Engine:    gin.New(),
 	}
 	hade.bind(baseFolder)
+
+	logService := hade.Container.MustGetInstance(contact.LogKey).(contact.Log)
 	hade.Use(gin.Recovery())
+	hade.Use(gin.LoggerWithWriter(logService.GetOutPut()))
+	hade.Use(middlewares.Logger(hade.Container))
 
 	return hade
 }
