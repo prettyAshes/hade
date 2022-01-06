@@ -22,14 +22,17 @@ func NewHadeSingleLog(params ...interface{}) (interface{}, error) {
 	level := params[1].(contact.LogLevel)
 	ctxFielder := params[2].(contact.CtxFielder)
 	formatter := params[3].(contact.Formatter)
-	logFolder := params[5].(string)
+
+	appServicer := c.MustGetInstance(contact.AppKey).(contact.App)
+	configServicer := c.MustGetInstance(contact.ConfigKey).(contact.Config)
+	logFolder := appServicer.LogFolder()
 
 	log := &HadeSingleLog{}
 	log.SetLevel(level)
 	log.SetCtxFielder(ctxFielder)
 	log.SetFormatter(formatter)
 	log.folder = logFolder
-	log.file = "hade.log"
+	log.file = configServicer.GetString("log.file")
 
 	fd, err := os.OpenFile(filepath.Join(log.folder, log.file), os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {

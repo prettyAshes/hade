@@ -28,16 +28,16 @@ func NewHadeRotateLog(params ...interface{}) (interface{}, error) {
 	level := params[1].(contact.LogLevel)
 	ctxFielder := params[2].(contact.CtxFielder)
 	formatter := params[3].(contact.Formatter)
-	logFolder := params[5].(string)
 
 	configServicer := c.MustGetInstance(contact.ConfigKey).(contact.Config)
+	appServicer := c.MustGetInstance(contact.AppKey).(contact.App)
 
+	logFolder := appServicer.LogFolder()
 	// 如果folder不存在，则创建
 	if !util.Exists(logFolder) {
 		os.MkdirAll(logFolder, os.ModePerm)
 	}
-
-	file := "hade.log"
+	file := configServicer.GetString("log.file")
 
 	// 从配置文件获取date_format信息
 	dateFormat := "%Y%m%d%H"

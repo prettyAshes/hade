@@ -5,7 +5,6 @@ import (
 	"hade/framework/contact"
 	"hade/framework/provider/log/formatter"
 	"hade/framework/provider/log/services"
-	"hade/framework/util"
 	"io"
 
 	"github.com/spf13/cast"
@@ -36,7 +35,6 @@ func (provider *HadeLogServicerProvider) Name() string {
 }
 
 func (provider *HadeLogServicerProvider) Boot(container framework.Container) error {
-	appServicer := container.MustGetInstance(contact.AppKey).(contact.App)
 	configServicer := container.MustGetInstance(contact.ConfigKey).(contact.Config)
 
 	if configServicer.IsExist("log.driver") {
@@ -60,12 +58,6 @@ func (provider *HadeLogServicerProvider) Boot(container framework.Container) err
 	if logLevel == uint32(contact.UnknownLevel) {
 		provider.Level = contact.InfoLevel
 	}
-
-	logFolder := appServicer.LogFolder()
-	if logFolder == "" {
-		logFolder = util.GetExecDirectory()
-	}
-	provider.LogFolder = logFolder
 
 	return nil
 }
@@ -91,5 +83,5 @@ func (provider *HadeLogServicerProvider) IsDefer() bool {
 }
 
 func (provider *HadeLogServicerProvider) Params(container framework.Container) []interface{} {
-	return []interface{}{container, provider.Level, provider.CtxFielder, provider.Formatter, provider.Output, provider.LogFolder}
+	return []interface{}{container, provider.Level, provider.CtxFielder, provider.Formatter, provider.Output}
 }

@@ -28,10 +28,7 @@ func New(baseFolder string) Hade {
 		Container: framework.NewHadeContainer(),
 		Engine:    gin.New(),
 	}
-
 	hade.bind(baseFolder)
-
-	hade.Use(gin.Logger())
 	hade.Use(gin.Recovery())
 
 	return hade

@@ -29,6 +29,6 @@ func JsonFormatter(level contact.LogLevel, t time.Time, msg string, fields [][]i
 		l = append(l, k+": "+v)
 	}
 
-	bf.Write([]byte(strings.Join(l, " | ")))
+	bf.Write([]byte(Prefix(level) + " " + strings.Join(l, " | ")))
 	return bf.Bytes(), nil
 }

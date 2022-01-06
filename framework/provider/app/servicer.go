@@ -148,9 +148,7 @@ func NewHadeApp(params ...interface{}) (interface{}, error) {
 	baseFolder := params[1].(string)
 	// 如果没有设置，则使用参数
 	if baseFolder == "" {
-		baseFolder = "/Users/baby/go/src/hade"
-		// flag.StringVar(&baseFolder, "base_folder", "", "base_folder参数, 默认为当前路径")
-		// flag.Parse()
+		baseFolder = util.GetExecDirectory()
 	}
 	appId := uuid.New().String()
 	configMap := map[string]string{}
