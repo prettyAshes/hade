@@ -34,4 +34,6 @@ type App interface {
 
 	// LoadAppConfig 加载新的AppConfig，key为对应的函数转为小写下划线，比如ConfigFolder => config_folder
 	LoadAppConfig(kv map[string]string)
+	// LoadConfig 加载配置
+	LoadConfig(val []byte) error
 }

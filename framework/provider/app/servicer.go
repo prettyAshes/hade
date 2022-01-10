@@ -15,6 +15,29 @@ type HadeApp struct {
 	baseFolder string              // 基础路径
 	appId      string              // 表示当前这个app的唯一id, 可以用于分布式锁等
 	configMap  map[string]string   // 配置加载
+	config     AppConfig           // 配置
+}
+
+// AppConfig App配置文件的配置
+type AppConfig struct {
+	Swagger bool `yaml:"swagger"`
+	Path    struct {
+		ConfigFolder     string `yaml:"config_folder"`
+		LogFolder        string `yaml:"log_folder"`
+		HttpFolder       string `yaml:"http_folder"`
+		ConsoleFolder    string `yaml:"console_folder"`
+		StorageFolder    string `yaml:"storage_folder"`
+		ProviderFolder   string `yaml:"provider_folder"`
+		MiddlewareFolder string `yaml:"middleware_folder"`
+		CommandFolder    string `yaml:"command_folder"`
+		RuntimeFolder    string `yaml:"runtime_folder"`
+		TestFolder       string `yaml:"test_folder"`
+		DeployFolder     string `yaml:"deploy_folder"`
+		AppFolder        string `yaml:"app_folder"`
+	} `yaml:"path"`
+	Dev struct {
+		Port int `yaml:"port"`
+	} `yaml:"dev"`
 }
 
 // AppID 表示这个App的唯一ID
@@ -135,6 +158,11 @@ func (app HadeApp) LoadAppConfig(kv map[string]string) {
 	for key, val := range kv {
 		app.configMap[key] = val
 	}
+}
+
+// LoadConfig 加载配置
+func (app HadeApp) LoadConfig(val []byte) error {
+	return nil
 }
 
 // NewHadeApp 初始化HadeApp

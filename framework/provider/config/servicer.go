@@ -145,8 +145,11 @@ func (hadeConfig *HadeConfig) loadConfigFile(envFolder, fileName string) error {
 
 		// 读取app.path中的信息，更新app对应的folder
 		if name == "app" && hadeConfig.c.IsBind(contact.AppKey) {
+			appService := hadeConfig.c.MustGetInstance(contact.AppKey).(contact.App)
+			if err := appService.LoadConfig(bf); err != nil {
+				return err
+			}
 			if p, ok := c["path"]; ok {
-				appService := hadeConfig.c.MustGetInstance(contact.AppKey).(contact.App)
 				appService.LoadAppConfig(cast.ToStringMapString(p))
 			}
 		}
