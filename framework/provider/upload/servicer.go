@@ -47,7 +47,7 @@ func (hadeUpload *HadeUpload) Upload(subFolder, fileName string, reader *io.Read
 }
 
 func upload(uploadPath, fileName string, maxFileSize int64, reader *io.Reader) error {
-	fi, err := os.Create(fmt.Sprintf("%s/%s-%s", uploadPath, fileName, time.Now().Format("hh-mm-ss")))
+	fi, err := os.Create(fmt.Sprintf("%s/%s-%d", uploadPath, fileName, time.Now().Unix()))
 	if err != nil {
 		return err
 	}

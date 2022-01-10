@@ -32,7 +32,7 @@ func (provider *HadeUploadProvider) Boot(container framework.Container) error {
 	if provider.MaxFileSize == 0 && configServicer.IsExist("upload.maxFileSize") {
 		provider.MaxFileSize = cast.ToInt64(configServicer.Get("upload.maxFileSize"))
 	} else {
-		panic("upload folder is not exist")
+		panic("maxFileSize is not exist")
 	}
 
 	return nil
