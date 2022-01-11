@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/Shopify/sarama v1.30.1
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/gin-contrib/sse v0.1.0
 	github.com/go-playground/validator/v10 v10.9.0
