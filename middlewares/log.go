@@ -23,9 +23,11 @@ func Logger(container framework.Container) gin.HandlerFunc {
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = blw
 		c.Next()
+		errorMsg, _ := c.Get("errorMsg")
 		logService.Info(c, "response", [][]interface{}{
 			{"url", c.Request.URL},
 			{"body", blw.body.String()},
+			{"error_msg", errorMsg},
 		})
 	}
 }
